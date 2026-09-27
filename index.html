@@ -120,19 +120,18 @@
         let topLeftRect = topLeftLink.getBoundingClientRect();
         let topRightRect = topRightLink.getBoundingClientRect();
         const labelGap = 18;
-        const groupWidth = topLeftRect.width + bookingRect.width + topRightRect.width + labelGap * 2;
-        const groupLeft = (window.innerWidth - groupWidth) / 2 - navRect.left;
 
-        topLeftLink.style.left = `${groupLeft}px`;
-        topLeftLink.style.right = "auto";
-        topLeftLink.style.top = `${4}px`;
-        topRightLink.style.left = `${groupLeft + topLeftRect.width + labelGap + bookingRect.width + labelGap}px`;
-        topRightLink.style.right = "auto";
-        topRightLink.style.top = `${4}px`;
         bookingButton.style.top = `${4}px`;
-        bookingButton.style.left = `${groupLeft + topLeftRect.width + labelGap + bookingRect.width / 2}px`;
+        bookingButton.style.left = `${window.innerWidth / 2 - navRect.left}px`;
         bookingButton.style.right = "auto";
         bookingRect = bookingButton.getBoundingClientRect();
+
+        topLeftLink.style.left = `${bookingRect.left - navRect.left - topLeftRect.width - labelGap}px`;
+        topLeftLink.style.right = "auto";
+        topLeftLink.style.top = `${4}px`;
+        topRightLink.style.left = `${bookingRect.right - navRect.left + labelGap}px`;
+        topRightLink.style.right = "auto";
+        topRightLink.style.top = `${4}px`;
         topLeftRect = topLeftLink.getBoundingClientRect();
         topRightRect = topRightLink.getBoundingClientRect();
         document.documentElement.style.setProperty("--contact-gradient-x", `${((topLeftRect.left + topLeftRect.width / 2) / window.innerWidth) * 100}%`);
