@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="top-nav-font-loading">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,6 +15,14 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css?v=2fel-20260921-17" />
+    <script>
+      document.fonts.load('16px "Bohemian Typewriter"')
+        .catch(() => {})
+        .finally(() => {
+          document.documentElement.classList.remove("top-nav-font-loading");
+          document.documentElement.classList.add("top-nav-font-ready");
+        });
+    </script>
     <script type="importmap">
       {
         "imports": {
@@ -115,25 +123,9 @@
 
       function positionTopCornerLinks() {
         if (!bookingButton || !topLeftLink || !topRightLink) return;
-        const navRect = document.querySelector(".scene-nav").getBoundingClientRect();
-        let bookingRect = bookingButton.getBoundingClientRect();
-        let topLeftRect = topLeftLink.getBoundingClientRect();
-        let topRightRect = topRightLink.getBoundingClientRect();
-        const labelGap = 18;
-
-        bookingButton.style.top = `${4}px`;
-        bookingButton.style.left = `${window.innerWidth / 2 - navRect.left}px`;
-        bookingButton.style.right = "auto";
-        bookingRect = bookingButton.getBoundingClientRect();
-
-        topLeftLink.style.left = `${bookingRect.left - navRect.left - topLeftRect.width - labelGap}px`;
-        topLeftLink.style.right = "auto";
-        topLeftLink.style.top = `${4}px`;
-        topRightLink.style.left = `${bookingRect.right - navRect.left + labelGap}px`;
-        topRightLink.style.right = "auto";
-        topRightLink.style.top = `${4}px`;
-        topLeftRect = topLeftLink.getBoundingClientRect();
-        topRightRect = topRightLink.getBoundingClientRect();
+        const bookingRect = bookingButton.getBoundingClientRect();
+        const topLeftRect = topLeftLink.getBoundingClientRect();
+        const topRightRect = topRightLink.getBoundingClientRect();
         document.documentElement.style.setProperty("--contact-gradient-x", `${((topLeftRect.left + topLeftRect.width / 2) / window.innerWidth) * 100}%`);
         document.documentElement.style.setProperty("--booking-gradient-x", `${((bookingRect.left + bookingRect.width / 2) / window.innerWidth) * 100}%`);
         document.documentElement.style.setProperty("--live-gradient-x", `${((topRightRect.left + topRightRect.width / 2) / window.innerWidth) * 100}%`);
