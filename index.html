@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="2FEL.LIVE"
+    />
+    <title>2FEL.LIVE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Anton&family=Archivo+Black&family=Bebas+Neue&family=Bungee&family=Cormorant+Garamond:wght@600;700&family=DM+Mono&family=Fira+Code&family=IBM+Plex+Mono&family=Inter:wght@400;500;600;700;800;900&family=Lora:wght@600;700&family=Manrope:wght@400;600;700;800&family=Montserrat:wght@600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&family=Playfair+Display:wght@600;700;800&family=Press+Start+2P&family=Raleway:wght@600;700;800;900&family=Roboto:wght@500;700;900&family=Saira+Stencil+One&family=Space+Grotesk:wght@500;600;700&family=Unbounded:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css?v=2fel-20260921-17" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="desktop-scene">
+      <div class="photo-slideshow" aria-hidden="true">
+        <img class="background-image current" src="IMG_8137.JPG.jpeg" alt="" />
+        <img class="background-image next" src="IMG_8139.JPG.jpeg" alt="" />
+        <div class="top-gradient-zone top-gradient-contact" aria-hidden="true"></div>
+        <div class="top-gradient-zone top-gradient-booking" aria-hidden="true"></div>
+        <div class="top-gradient-zone top-gradient-live" aria-hidden="true"></div>
+      </div>
+
+      <div class="three-text-stage" aria-label="3D 2FEL typography">
+        <canvas id="three-text-canvas"></canvas>
+      </div>
+
+
+
+
+
+      <nav class="scene-nav" aria-label="Main navigation">
+        <a href="mailto:2fel.wav@gmail.com"><span>CONTACT</span></a>
+        <a class="booking-button" href="mailto:bookings@jinnagency.com?subject=Booking%20Request%20for%202FEL"><span>BOOKING</span></a>
+        <h1 class="booking-title" data-text="2FEL">2FEL</h1>
+        <a href="https://2fel.live" target="_blank" rel="noreferrer"><span>2FEL.LIVE</span></a>
+      </nav>
+
+      <div class="hero-actions" aria-label="Quick links">
+        <a href="https://open.spotify.com/intl-de/artist/2YjhWg5nfeR14eUXqonx3x" target="_blank" rel="noreferrer" aria-label="Spotify">
+          <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="9.5"></circle>
+            <path d="M7 9.1c3.35-1 6.86-.7 9.7.73M7.45 12.15c2.8-.76 5.72-.5 8.25.7M8.25 15.1c2.2-.46 4.44-.27 6.35.5"></path>
+          </svg>
+        </a>
+        <a href="https://instagram.com/_2fel_" target="_blank" rel="noreferrer" aria-label="Instagram">
+          <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <rect x="3.5" y="3.5" width="17" height="17" rx="4.5"></rect>
+            <circle cx="12" cy="12" r="4"></circle>
+            <circle class="social-icon-dot" cx="17.5" cy="6.5" r="1.15"></circle>
+          </svg>
+        </a>
+        <a href="https://soundcloud.com/2fel_official" target="_blank" rel="noreferrer" aria-label="SoundCloud">
+          <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M4 16.9v-3.8M6.5 18.1V11M9 18.1V8.8M11.5 18.1V7.1M14 18.1V9.2c.62-.24 1.29-.37 2-.37 3.04 0 5.5 2.46 5.5 5.5s-2.46 5.5-5.5 5.5H4"></path>
+          </svg>
+        </a>
+      </div>
+
+    </div>
+
+    <script type="module">
+      import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js";
+      import { RoomEnvironment } from "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/environments/RoomEnvironment.js";
+      import opentype from "https://cdn.jsdelivr.net/npm/opentype.js@1.3.4/+esm";
+
+      const canvas = document.querySelector("#three-text-canvas");
+      const stage = document.querySelector(".three-text-stage");
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      const textGroup = new THREE.Group();
+      const textValue = "2FEL";
+      const clock = new THREE.Clock();
+      let rotationY = 0;
+
+      const slideshowImages = [
+        "IMG_8137.JPG.jpeg",
+        "IMG_8139.JPG.jpeg",
+        "IMG_8141.JPG.jpeg",
+        "IMG_8143.JPG.jpeg",
+        "IMG_8144.JPG.jpeg",
+        "IMG_8147.JPG.jpeg",
+      ];
+      const currentImage = document.querySelector(".background-image.current");
+      const nextImage = document.querySelector(".background-image.next");
+      const socialLinks = [...document.querySelectorAll(".hero-actions a")];
+      const bookingButton = document.querySelector(".booking-button");
+      const topLeftLink = document.querySelector(".scene-nav > a:first-of-type");
+      const topRightLink = document.querySelector(".scene-nav > a:last-of-type");
+      const asciiArt = document.querySelector(".ascii-art");
+      const topGradientZones = [
+        document.querySelector(".top-gradient-contact"),
+        document.querySelector(".top-gradient-booking"),
+        document.querySelector(".top-gradient-live"),
+      ];
+      let slideshowIndex = 0;
+      let slideshowBusy = false;
+      const luminanceCanvas = document.createElement("canvas");
+      luminanceCanvas.width = 128;
+      luminanceCanvas.height = 128;
+      const luminanceContext = luminanceCanvas.getContext("2d", { willReadFrequently: true });
+
+      function positionTopCornerLinks() {
+        if (!bookingButton || !topLeftLink || !topRightLink) return;
+        const navRect = document.querySelector(".scene-nav").getBoundingClientRect();
+        let bookingRect = bookingButton.getBoundingClientRect();
+        let topLeftRect = topLeftLink.getBoundingClientRect();
+        let topRightRect = topRightLink.getBoundingClientRect();
+        const labelGap = 18;
+        const groupWidth = topLeftRect.width + bookingRect.width + topRightRect.width + labelGap * 2;
+        const groupLeft = (window.innerWidth - groupWidth) / 2 - navRect.left;
+
+        topLeftLink.style.left = `${groupLeft}px`;
+        topLeftLink.style.right = "auto";
+        topLeftLink.style.top = `${4}px`;
+        topRightLink.style.left = `${groupLeft + topLeftRect.width + labelGap + bookingRect.width + labelGap}px`;
+        topRightLink.style.right = "auto";
+        topRightLink.style.top = `${4}px`;
+        bookingButton.style.top = `${4}px`;
+        bookingButton.style.left = `${groupLeft + topLeftRect.width + labelGap + bookingRect.width / 2}px`;
+        bookingButton.style.right = "auto";
+        bookingRect = bookingButton.getBoundingClientRect();
+        topLeftRect = topLeftLink.getBoundingClientRect();
+        topRightRect = topRightLink.getBoundingClientRect();
+        document.documentElement.style.setProperty("--contact-gradient-x", `${((topLeftRect.left + topLeftRect.width / 2) / window.innerWidth) * 100}%`);
+        document.documentElement.style.setProperty("--booking-gradient-x", `${((bookingRect.left + bookingRect.width / 2) / window.innerWidth) * 100}%`);
+        document.documentElement.style.setProperty("--live-gradient-x", `${((topRightRect.left + topRightRect.width / 2) / window.innerWidth) * 100}%`);
+        document.documentElement.style.setProperty("--top-gradient-y", `${((bookingRect.top + bookingRect.height / 2) / window.innerHeight) * 100}%`);
+        [bookingRect, bookingRect, bookingRect].forEach((rect, index) => {
+          const zone = topGradientZones[index];
+          if (!zone) return;
+          const leftGap = Math.max(0, bookingRect.left - topLeftRect.right);
+          const rightGap = Math.max(0, topRightRect.left - bookingRect.right);
+          const zoneWidth = bookingRect.width + Math.min(leftGap, rightGap) * 2;
+          zone.style.left = `${rect.left + rect.width / 2 - zoneWidth / 2}px`;
+          zone.style.width = `${zoneWidth}px`;
+        });
+      }
+
+      function imageLuminanceBehindButton(image, buttonRect) {
+        if (!image.complete || !image.naturalWidth) return 0.18;
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const imageScale = Math.max(viewportWidth / image.naturalWidth, viewportHeight / image.naturalHeight);
+        const renderedWidth = image.naturalWidth * imageScale;
+        const renderedHeight = image.naturalHeight * imageScale;
+        const cropX = (renderedWidth - viewportWidth) / 2;
+        const cropY = (renderedHeight - viewportHeight) / 2;
+        const sampleLeft = Math.max(0, buttonRect.left + buttonRect.width * 0.2);
+        const sampleRight = Math.min(viewportWidth, buttonRect.right - buttonRect.width * 0.2);
+        const sampleTop = Math.max(0, buttonRect.top + buttonRect.height * 0.28);
+        const sampleBottom = Math.min(viewportHeight, buttonRect.bottom - buttonRect.height * 0.28);
+        const sourceX = (sampleLeft + cropX) / imageScale;
+        const sourceY = (sampleTop + cropY) / imageScale;
+        const sourceWidth = Math.max(1, (sampleRight - sampleLeft) / imageScale);
+        const sourceHeight = Math.max(1, (sampleBottom - sampleTop) / imageScale);
+        luminanceContext.clearRect(0, 0, 128, 128);
+        luminanceContext.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, 128, 128);
+        const pixels = luminanceContext.getImageData(0, 0, 128, 128).data;
+        let total = 0;
+        let count = 0;
+        for (let index = 0; index < pixels.length; index += 4) {
+          const red = pixels[index] / 255;
+          const green = pixels[index + 1] / 255;
+          const blue = pixels[index + 2] / 255;
+          total += 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+          count += 1;
+        }
+        return count ? total / count : 0.18;
+      }
+
+      function updateSocialContrast() {
+        if (!bookingButton) return;
+        positionTopCornerLinks();
+        const currentOpacity = Number.parseFloat(getComputedStyle(currentImage).opacity) || 0;
+        const nextOpacity = Number.parseFloat(getComputedStyle(nextImage).opacity) || 0;
+        const totalOpacity = currentOpacity + nextOpacity || 1;
+        const getGroupRect = (elements) => {
+          const rects = elements.map((element) => element.getBoundingClientRect());
+          if (!rects.length) return null;
+          const left = Math.min(...rects.map((rect) => rect.left));
+          const top = Math.min(...rects.map((rect) => rect.top));
+          const right = Math.max(...rects.map((rect) => rect.right));
+          const bottom = Math.max(...rects.map((rect) => rect.bottom));
+          return { left, top, right, bottom, width: right - left, height: bottom - top };
+        };
+        const getLocalBrightness = (rect) => {
+          if (!rect) return 0.18;
+          const currentBrightness = imageLuminanceBehindButton(currentImage, rect);
+          const nextBrightness = imageLuminanceBehindButton(nextImage, rect);
+          return (
+            currentBrightness * currentOpacity +
+            nextBrightness * nextOpacity
+          ) / totalOpacity;
+        };
+        const setGroupContrast = (rect, variable) => {
+          const target = getLocalBrightness(rect) > 0.5 ? 15 : 245;
+          document.documentElement.style.setProperty(variable, `rgb(${target} ${target} ${target})`);
+        };
+        setGroupContrast(getGroupRect(socialLinks), "--social-ink");
+        const cornerTextColor = "rgb(0 0 0)";
+        const topLeftText = topLeftLink.querySelector("span");
+        const topRightText = topRightLink.querySelector("span");
+        topLeftLink.style.color = cornerTextColor;
+        topLeftText.style.color = cornerTextColor;
+        topLeftText.style.webkitTextFillColor = cornerTextColor;
+        bookingButton.style.color = cornerTextColor;
+        bookingButton.style.borderColor = cornerTextColor;
+        const bookingText = bookingButton.querySelector("span");
+        bookingText.style.color = cornerTextColor;
+        bookingText.style.webkitTextFillColor = cornerTextColor;
+        topRightLink.style.color = cornerTextColor;
+        topRightText.style.color = cornerTextColor;
+      }
+
+      function crossfadeToNextImage() {
+        if (slideshowBusy) return;
+        slideshowBusy = true;
+        const nextIndex = (slideshowIndex + 1) % slideshowImages.length;
+        nextImage.src = slideshowImages[nextIndex];
+        nextImage.onload = () => {
+          nextImage.classList.add("is-visible");
+          currentImage.classList.remove("is-visible");
+          window.setTimeout(() => {
+            currentImage.src = nextImage.src;
+            currentImage.classList.add("is-visible");
+            nextImage.classList.remove("is-visible");
+            slideshowIndex = nextIndex;
+            slideshowBusy = false;
+          }, 1600);
+        };
+      }
+
+      currentImage.classList.add("is-visible");
+      window.setInterval(crossfadeToNextImage, 7000);
+      window.setInterval(updateSocialContrast, 80);
+      updateSocialContrast();
+
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.2;
+      scene.add(textGroup);
+
+      const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      const environment = new RoomEnvironment(renderer);
+      scene.environment = pmremGenerator.fromScene(environment).texture;
+      environment.dispose();
+      pmremGenerator.dispose();
+      textGroup.position.set(0, 0, 0);
+
+      scene.add(new THREE.HemisphereLight(0xeaf5ff, 0x10141a, 2.2));
+
+      const keyLight = new THREE.DirectionalLight(0xffffff, 4.2);
+      keyLight.position.set(-3, 5, 12);
+      scene.add(keyLight);
+
+      const rimLight = new THREE.DirectionalLight(0x9ecbff, 3.2);
+      rimLight.position.set(8, -1, -10);
+      scene.add(rimLight);
+
+      function pathToShapes(path) {
+        const shapePath = new THREE.ShapePath();
+        const flipY = (value) => -value;
+        path.commands.forEach((command) => {
+          if (command.type === "M") shapePath.moveTo(command.x, flipY(command.y));
+          if (command.type === "L") shapePath.lineTo(command.x, flipY(command.y));
+          if (command.type === "C") shapePath.bezierCurveTo(command.x1, flipY(command.y1), command.x2, flipY(command.y2), command.x, flipY(command.y));
+          if (command.type === "Q") shapePath.quadraticCurveTo(command.x1, flipY(command.y1), command.x, flipY(command.y));
+          if (command.type === "Z") shapePath.currentPath.closePath();
+        });
+        return shapePath.toShapes(true);
+      }
+
+      opentype.load("Betelgeuse-z4eD.ttf", (error, font) => {
+        if (error) return;
+
+        const fontSize = 1.25;
+        const path = font.getPath(textValue, 0, 0, fontSize);
+        const shapes = pathToShapes(path);
+        const geometry = new THREE.ExtrudeGeometry(shapes, {
+          depth: 1,
+          curveSegments: 12,
+          bevelEnabled: true,
+          bevelThickness: 0.03,
+          bevelSize: 0.02,
+          bevelSegments: 2,
+        });
+
+        geometry.computeBoundingBox();
+        const letterHeight = geometry.boundingBox.max.y - geometry.boundingBox.min.y;
+        const initialDepth = geometry.boundingBox.max.z - geometry.boundingBox.min.z;
+        geometry.scale(1, 1, (letterHeight * 0.9) / initialDepth);
+        geometry.center();
+
+        const material = new THREE.MeshPhysicalMaterial({
+          color: 0xf2f5f8,
+          metalness: 1,
+          roughness: 0.015,
+          clearcoat: 1,
+          clearcoatRoughness: 0.01,
+        });
+
+        const textMesh = new THREE.Mesh(geometry, material);
+        textGroup.add(textMesh);
+      });
+
+      function resize() {
+        const { width, height } = stage.getBoundingClientRect();
+        renderer.setSize(width, height, false);
+        camera.aspect = width / height;
+        const responsiveScale = Math.max(0.62, Math.min(1, width / 900));
+        textGroup.scale.setScalar(responsiveScale * 1.35);
+        camera.position.set(0, 0, 30);
+        camera.lookAt(0, 0, 0);
+        camera.updateProjectionMatrix();
+        positionTopCornerLinks();
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const delta = clock.getDelta();
+        rotationY += delta * 0.22;
+        textGroup.rotation.y = rotationY;
+        textGroup.rotation.x = 0;
+        textGroup.rotation.z = 0;
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener("resize", resize);
+      resize();
+      animate();
+    </script>
+  </body>
+</html>
